@@ -9,6 +9,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { ProductCard } from './ProductCard';
 import { FilterSidebar } from './FilterSidebar';
 import { formatINR } from '../utils/currency';
+import { VideoCard } from './HomeVideoSection';
 
 // ─── Category master config ────────────────────────────────────────────────────
 const CATEGORY_CONFIG = {
@@ -345,50 +346,7 @@ const CATEGORY_VIDEOS = {
   ],
 };
 
-// ─── Video Accordion Panel ─────────────────────────────────────────────────────
-function VideoPanel({ video, isExpanded, isHovered, onClick, onMouseEnter, onMouseLeave, cfg }) {
-  const ref = useRef(null);
-  const [muted, setMuted] = useState(true);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.muted = muted;
-    if (isExpanded || isHovered) el.play().catch(() => {});
-    else el.pause();
-  }, [isExpanded, isHovered, muted]);
-  return (
-    <div onClick={onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}
-      className={`relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-700 ease-out border border-white/10 ${isExpanded ? 'flex-[4]' : 'flex-[1] hover:flex-[1.3]'} h-[380px] md:h-[460px]`}>
-      <video ref={ref} src={video.url} loop playsInline muted className="absolute inset-0 w-full h-full object-cover" />
-      <div className={`absolute inset-0 transition-all duration-500 ${isExpanded ? 'bg-gradient-to-t from-black/90 via-black/40 to-transparent' : 'bg-black/60'}`} />
-      {!isExpanded && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="hidden md:block transform -rotate-90 whitespace-nowrap text-white font-black text-sm uppercase tracking-[0.3em] opacity-70">{video.shortTitle}</span>
-          <span className="md:hidden text-white font-black text-xs uppercase tracking-widest opacity-80">{video.shortTitle}</span>
-        </div>
-      )}
-      {isExpanded && (
-        <div className="absolute bottom-0 inset-x-0 p-6 animate-fade-in">
-          <span className={`inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border mb-3 ${cfg.pillColor}`}>▶ Playing</span>
-          <h3 className="text-2xl font-black text-white mb-2 leading-tight">{video.title}</h3>
-          <p className="text-white/70 text-sm mb-4 max-w-md">{video.desc}</p>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-white/50 bg-white/10 border border-white/20 px-3 py-1.5 rounded-lg">⏱ {video.duration}</span>
-            <button onClick={e => { e.stopPropagation(); setMuted(m => !m); }}
-              className="w-9 h-9 bg-white/20 hover:bg-white/30 border border-white/20 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer">
-              {muted ? '🔇' : '🔊'}
-            </button>
-            <button onClick={e => { e.stopPropagation(); document.getElementById('cat-products')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className={`bg-gradient-to-r ${cfg.accentGradient} text-white text-xs font-black px-5 py-2 rounded-full flex items-center gap-1.5 cursor-pointer`}>
-              Shop Collection <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
+// ─── Video Accordion Panel Removed (Replaced by VideoCard) ─────────────
 // ─── Feature Card ─────────────────────────────────────────────────────────────
 function FeatureCard({ feature, cfg }) {
   return (
@@ -917,15 +875,19 @@ export function CategoryPage({
                       {renderProductGrid(topProducts, true)}
 
                       {/* Video Spotlights In-Between */}
-                      {videos.length > 0 && expandedId && (
-                        <div className="my-10 bg-slate-950 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-                          <div className="flex flex-col md:flex-row gap-3 w-full relative z-10">
+                      {videos.length > 0 && (
+                        <div id="cat-videos" className="my-10 bg-slate-950 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                          <h2 className="text-2xl font-black text-white mb-6">Featured Videos</h2>
+                          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
                             {videos.map(vid => (
-                              <VideoPanel key={vid.id} video={vid} cfg={cfg}
-                                isExpanded={expandedId === vid.id} isHovered={hoveredId === vid.id}
-                                onClick={() => setExpandedId(vid.id)}
-                                onMouseEnter={() => setHoveredId(vid.id)}
-                                onMouseLeave={() => setHoveredId(null)} />
+                              <VideoCard 
+                                key={vid.id} 
+                                video={{
+                                  ...vid, 
+                                  category: categoryKey, 
+                                  thumbnail: vid.thumbnail || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=80'
+                                }} 
+                              />
                             ))}
                           </div>
                         </div>

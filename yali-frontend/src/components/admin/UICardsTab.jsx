@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, XCircle } from 'lucide-react';
 import { ToggleSwitch } from './ToggleSwitch';
 import { useToast } from '../../context/ToastContext';
+import { API_URL } from '../../config';
 
 export function UICardsTab({ token, uiCards: initialUiCards, handleToggleStatus }) {
   const { showToast, showConfirm } = useToast();
@@ -29,7 +30,7 @@ export function UICardsTab({ token, uiCards: initialUiCards, handleToggleStatus 
 
   const fetchCards = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/ui-cards', {
+      const res = await fetch(`${API_URL}/admin/ui-cards`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -54,8 +55,8 @@ export function UICardsTab({ token, uiCards: initialUiCards, handleToggleStatus 
 
     try {
       const url = editingCard
-        ? `http://localhost:5000/api/ui-cards/${editingCard.id}`
-        : `http://localhost:5000/api/ui-cards`;
+        ? `${API_URL}/ui-cards/${editingCard.id}`
+        : `${API_URL}/ui-cards`;
       
       const method = editingCard ? 'PUT' : 'POST';
 
@@ -95,7 +96,7 @@ export function UICardsTab({ token, uiCards: initialUiCards, handleToggleStatus 
   const handleDelete = (id) => {
     showConfirm('Delete this UI Card?', async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/ui-cards/${id}`, {
+        const res = await fetch(`${API_URL}/ui-cards/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

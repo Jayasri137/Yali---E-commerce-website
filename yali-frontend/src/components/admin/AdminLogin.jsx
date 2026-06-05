@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Lock, Mail, ArrowLeft, ShieldCheck, KeyRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../../config';
 
 export function AdminLogin({ onSuccess, onGoBack }) {
   const { showToast } = useToast();

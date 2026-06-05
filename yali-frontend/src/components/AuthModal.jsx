@@ -2,11 +2,12 @@ import { Mail, Lock, User, Phone, ArrowLeft, Check, Building, X } from 'lucide-r
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config';
 import { useGoogleLogin } from '@react-oauth/google';
 import FacebookLoginModule from 'react-facebook-login/dist/facebook-login-render-props';
 const FacebookLogin = FacebookLoginModule.default || FacebookLoginModule;
 
-const API_URL = 'http://localhost:5000/api';
+
 
 export function AuthModal({ isOpen, onClose, onSuccess }) {
   const { showToast } = useToast();

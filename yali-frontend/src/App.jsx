@@ -20,6 +20,7 @@ import { InvoiceModal } from './components/InvoiceModal';
 import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { API_URL } from './config';
 import { AdminLogin } from './components/admin/AdminLogin';
 import { StaticPage } from './components/StaticPage';
 import {
@@ -50,7 +51,7 @@ import {
 import './styles/custom.css';
 import { useToast } from './context/ToastContext';
 
-const API_URL = 'http://localhost:5000/api';
+
 
 // ─────────────────────────────────────────────
 // Live Countdown hook

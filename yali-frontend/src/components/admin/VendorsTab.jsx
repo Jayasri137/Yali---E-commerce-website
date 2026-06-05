@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ToggleSwitch } from './ToggleSwitch';
 import { Plus, X } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
+import { API_URL } from '../../config';
 
 export function VendorsTab({
   users,
@@ -25,7 +26,7 @@ export function VendorsTab({
   const handleRegisterVendor = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

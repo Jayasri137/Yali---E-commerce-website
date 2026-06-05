@@ -31,8 +31,7 @@ import { BannersTab } from './BannersTab';
 import { VideosTab } from './VideosTab';
 import { UICardsTab } from './UICardsTab';
 import { FileUploadInput } from './FileUploadInput';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../../config';
 
 export function AdminDashboard({
   products = [],

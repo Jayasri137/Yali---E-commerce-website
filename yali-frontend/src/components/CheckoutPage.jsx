@@ -2,6 +2,7 @@ import { X, CreditCard, Wallet, Building2, Smartphone, ChevronRight, Lock, Tag, 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config';
 import { formatINR } from '../utils/currency';
 
 export function CheckoutPage({ items, onPaymentSuccess, coupons = [], token, user }) {
@@ -70,7 +71,7 @@ export function CheckoutPage({ items, onPaymentSuccess, coupons = [], token, use
     
     try {
       const fullAddress = `${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.pincode}`;
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

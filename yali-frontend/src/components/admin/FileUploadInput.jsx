@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Upload, Link2, X, CheckCircle, Loader2, Film, Image } from 'lucide-react';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../../config';
 
 /**
  * Reusable FileUploadInput component

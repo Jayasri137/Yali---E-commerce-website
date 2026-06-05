@@ -3,6 +3,7 @@ import { FileUploadInput } from './FileUploadInput';
 import { Plus, Edit2, Trash2, XCircle } from 'lucide-react';
 import { ToggleSwitch } from './ToggleSwitch';
 import { useToast } from '../../context/ToastContext';
+import { API_URL } from '../../config';
 
 export function BannersTab({
   filteredBanners,
@@ -56,8 +57,8 @@ export function BannersTab({
     e.preventDefault();
     try {
       const url = editingBanner
-        ? `http://localhost:5000/api/banners/${editingBanner.id}`
-        : `http://localhost:5000/api/banners`;
+        ? `${API_URL}/banners/${editingBanner.id}`
+        : `${API_URL}/banners`;
       
       const method = editingBanner ? 'PUT' : 'POST';
 
@@ -90,7 +91,7 @@ export function BannersTab({
   const handleDeleteBanner = (id) => {
     showConfirm('Are you sure you want to delete this banner?', async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/banners/${id}`, {
+        const res = await fetch(`${API_URL}/banners/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

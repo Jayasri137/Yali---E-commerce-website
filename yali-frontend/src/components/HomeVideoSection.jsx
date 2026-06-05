@@ -85,75 +85,33 @@ const CATEGORY_COLORS = {
   'organic-groceries': 'from-amber-500 to-emerald-500',
 };
 
-function VideoCard({ video, onCategoryClick }) {
+export function VideoCard({ video, onCategoryClick }) {
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    if (isHovered || isExpanded) {
+    
+    // Play muted on hover, or play with sound if user explicitly unmuted
+    if (isHovered || !isMuted) {
       el.muted = isMuted;
       el.play().catch(() => {});
     } else {
       el.pause();
       el.currentTime = 0;
     }
-  }, [isHovered, isExpanded, isMuted]);
+  }, [isHovered, isMuted]);
+
+  const handleCardClick = () => {
+    setIsMuted(!isMuted);
+  };
 
   const categoryGradient = CATEGORY_COLORS[video.category] || 'from-gray-600 to-gray-400';
 
   return (
     <>
-      {/* Expanded Overlay */}
-      {isExpanded && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
-          onClick={() => setIsExpanded(false)}
-        >
-          <div
-            className="relative w-full max-w-3xl mx-4 rounded-2xl overflow-hidden shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <video
-              src={video.url}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              className="w-full max-h-[80vh] object-contain bg-black"
-            />
-            <div className="absolute top-3 right-3 flex gap-2">
-              <button
-                onClick={() => setIsMuted((m) => !m)}
-                className="w-9 h-9 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all"
-              >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="w-9 h-9 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-5">
-              <h3 className="text-white font-bold text-xl mb-1">{video.title}</h3>
-              {video.category && onCategoryClick && (
-                <button
-                  onClick={() => { setIsExpanded(false); onCategoryClick(video.category); }}
-                  className={`mt-2 bg-gradient-to-r ${categoryGradient} text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer transition-opacity hover:opacity-90`}
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  Shop {video.shortTitle || video.category}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Card */}
       <div
@@ -161,7 +119,7 @@ function VideoCard({ video, onCategoryClick }) {
         style={{ aspectRatio: '9/16' }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => setIsExpanded(true)}
+        onClick={handleCardClick}
       >
         {/* Background thumbnail */}
         <img
@@ -184,23 +142,30 @@ function VideoCard({ video, onCategoryClick }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Top category pill */}
-        <div className={`absolute top-3 left-3 bg-gradient-to-r ${categoryGradient} px-2.5 py-0.5 rounded-full`}>
+        <div className={`absolute top-3 right-3 bg-gradient-to-r ${categoryGradient} px-2.5 py-0.5 rounded-full transition-opacity duration-300 ${(isHovered || !isMuted) ? 'opacity-0' : 'opacity-100'}`}>
           <span className="text-white text-[9px] font-black uppercase tracking-wider">
             {video.category?.replace(/-/g, ' ')}
           </span>
         </div>
 
-        {/* Play icon */}
-        <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+        {/* Play icon (or volume icon if playing with sound) */}
+        <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${(!isHovered && isMuted) ? 'opacity-100' : 'opacity-0'}`}>
           <div className="w-12 h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
             <Play className="w-5 h-5 text-white fill-white ml-0.5" />
           </div>
         </div>
 
-        {/* Duration pill */}
-        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[9px] font-semibold px-2 py-0.5 rounded">
-          {video.duration}
+        {/* Volume toggle icon shown when hovered or unmuted */}
+        <div className={`absolute top-3 left-3 flex gap-2 transition-opacity duration-300 ${(isHovered || !isMuted) ? 'opacity-100' : 'opacity-0'}`}>
+          <button
+            onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+            className="w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
         </div>
+
+
 
         {/* Bottom info */}
         <div className="absolute bottom-0 inset-x-0 p-3">

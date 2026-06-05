@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FileUploadInput } from './FileUploadInput';
 import { ToggleSwitch } from './ToggleSwitch';
 import { useToast } from '../../context/ToastContext';
+import { API_URL } from '../../config';
 
 export function VideosTab({
   videos = [],
@@ -15,7 +16,7 @@ export function VideosTab({
   handleToggleStatus
 }) {
   const { showConfirm } = useToast();
-  const API_URL = 'http://localhost:5000/api';
+
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
